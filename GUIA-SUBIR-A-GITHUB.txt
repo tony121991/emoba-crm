@@ -1,0 +1,29 @@
+# Subir CRM EMOBA a GitHub sin Git instalado
+
+Repositorio:
+https://github.com/tony121991/emoba-crm.git
+
+## Opcion rapida desde GitHub web
+
+1. Abre el repositorio en GitHub.
+2. Click en Add file.
+3. Click en Upload files.
+4. Arrastra el contenido de la carpeta crm-cloud-ready, no la carpeta completa.
+5. Asegurate de incluir:
+   - public/
+   - scripts/
+   - server.js
+   - package.json
+   - schema.sql
+   - render.yaml
+   - README-CLOUD-READY.txt
+   - .env.example
+   - .gitignore
+6. Escribe commit message: Initial EMOBA CRM cloud ready
+7. Click en Commit changes.
+
+## Importante
+
+No subas archivos .env reales con claves.
+No pegues SERVICE_ROLE_KEY en GitHub.
+Las claves se configuran despues en Render como Environment Variables.

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM EMOBA Online MVP</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <section class="login-screen" id="loginScreen">
+    <form class="login-card" id="loginForm">
+      <img src="logo-emoba.png" alt="EMOBA Energia en Movimiento del Bajio">
+      <h1>CRM EMOBA</h1>
+      <p>Acceso al sistema online MVP</p>
+      <label>Correo<input name="email" type="email" value="admin@emoba.mx" required></label>
+      <label>Contraseña<input name="password" type="password" value="Admin123!" required></label>
+      <button class="primary-button" type="submit">Entrar</button>
+      <div class="demo-keys">Admin: admin@emoba.mx / Admin123!<br>Cliente: cliente@demo.com / Cliente123!</div>
+      <div class="message" id="loginMessage"></div>
+    </form>
+  </section>
+
+  <div class="app-shell hidden" id="appShell">
+    <aside class="sidebar">
+      <div class="brand"><img class="brand-logo" src="logo-emoba.png" alt="EMOBA"><div><strong>EMOBA Logística</strong><span id="userBadge">Sistema</span></div></div>
+      <nav class="nav">
+        <button class="nav-item active" data-view="dashboard" data-cap="view_dashboard">Panel interno</button>
+        
+        <button class="nav-item" data-view="history" data-cap="view_history">Entregados</button>
+        <button class="nav-item" data-view="users" data-cap="manage_users">Usuarios</button><button class="nav-item" data-view="ops" data-cap="manage_users">Operación</button>
+      </nav>
+      <button class="ghost-dark" id="logoutButton">Cerrar sesión</button>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div><p class="eyebrow">Sistema online MVP</p><h1 id="pageTitle">Panel interno</h1></div>
+        <button class="primary-button" id="newOrderShortcut">Añadir pedido</button>
+      </header>
+
+      <section class="view active" id="dashboardView">
+        <div class="metrics-grid"><article class="metric"><span>Activos</span><strong id="activeCount">0</strong></article><article class="metric"><span>En ruta</span><strong id="routeCount">0</strong></article><article class="metric"><span>Entregados</span><strong id="deliveredCount">0</strong></article><article class="metric attention"><span>Atención</span><strong id="attentionCount">0</strong></article></div>
+        <div class="toolbar"><label class="search"><span>Buscar</span><input id="internalSearch" type="search" placeholder="Cliente, carta porte, destino..."></label><label><span>Estatus</span><select id="statusFilter"><option value="all">Todos</option><option>Cargando</option><option>Cargado en espera de documentos</option><option>En ruta a destino</option><option>Entregado</option></select></label></div>
+        <div class="table-shell"><table><thead><tr><th>Carta Porte</th><th>Cliente</th><th>Destino</th><th>Fecha</th><th>Estatus</th><th>Unidad</th><th>Tanque 1</th><th>Producto</th><th></th></tr></thead><tbody id="ordersTable"></tbody></table></div>
+      </section>
+
+      <section class="view" id="clientView">
+        <div class="client-layout">
+          <form class="panel" id="orderForm"><div class="section-title"><p class="eyebrow">Añadir pedido</p><h2>Alta de pedido</h2></div><div class="form-grid"><label>Carta Porte<input name="id" required placeholder="Ej. EM-1028"></label><label>Cliente<input name="customer" required placeholder="Nombre de la empresa"></label><label>Contacto<input name="contact" required placeholder="Nombre y teléfono"></label><label>Producto<select name="product" required><option>Regular</option><option>Premium</option><option>Diesel</option></select></label><label>Cantidad<input name="quantity" required placeholder="Ej. 5,000 litros"></label><label>Destino<input name="destination" required placeholder="Dirección de entrega"></label><label>Fecha solicitada<input name="requestedDate" required type="date"></label><label>Tipo de servicio<select name="loadType"><option>Pipa programada</option><option>Abastecimiento</option><option>Entrega urgente</option><option>Servicio recurrente</option></select></label></div><label>Detalles<textarea name="details" rows="4" placeholder="Tipo de unidad, horario, instrucciones especiales"></textarea></label><label>Evidencias fotográficas o documentos<input name="evidence" id="orderEvidence" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"></label><button class="primary-button wide" type="submit">Crear pedido</button><div class="message" id="orderMessage"></div></form>
+          <div class="panel"><div class="section-title"><p class="eyebrow">Rastreo</p><h2>Consultar carta porte</h2></div><div class="track-box"><input id="trackingInput" placeholder="Ej. EM-1024"><button class="ghost-button" id="trackButton">Rastrear</button></div><div id="trackingResult" class="tracking-result empty">Ingresa una carta porte para ver el avance.</div></div>
+        </div>
+      </section>
+
+      <section class="view" id="historyView"><div class="toolbar"><label class="search"><span>Buscar entregados</span><input id="historySearch" type="search" placeholder="Cliente, carta porte, destino..."></label></div><div id="historyList" class="history-list"></div></section>
+
+      <section class="view" id="usersView">
+        <div class="users-layout">
+          <form class="panel" id="userForm"><div class="section-title"><p class="eyebrow">Usuarios</p><h2>Crear usuario</h2></div><div class="form-grid"><label>Nombre<input name="name" required></label><label>Correo<input name="email" type="email" required></label><label>Contraseña<input name="password" type="password" value="Emoba123!" required></label><label>Rol<select name="role"><option value="cliente">Cliente</option><option value="operador">Operador</option><option value="admin">Administrador</option></select></label><label>Cliente asignado<input name="customerName" placeholder="Empresa cliente"></label></div><div class="capabilities" id="capabilityChecks"></div><button class="primary-button wide" type="submit">Crear usuario</button><div class="message" id="userMessage"></div></form>
+          <div class="panel"><div class="section-title"><p class="eyebrow">Activos</p><h2>Usuarios del sistema</h2></div><div id="usersList" class="users-list"></div></div>
+        </div>
+      </section>
+
+      <section class="view" id="opsView">
+        <div class="ops-layout">
+          <div class="panel"><div class="section-title"><p class="eyebrow">Salud del sistema</p><h2>Operación diaria</h2></div><div id="opsHealth" class="ops-grid"></div><button class="ghost-button wide" id="refreshOpsButton">Actualizar</button><button class="primary-button wide" id="backupButton">Crear respaldo ahora</button><a class="download-button" href="/api/exports/orders.csv">Exportar pedidos CSV</a><div class="message" id="opsMessage"></div></div>
+          <div class="panel"><div class="section-title"><p class="eyebrow">Bitácora</p><h2>Últimos cambios</h2></div><div id="auditList" class="audit-list"></div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="orderDialog"><form method="dialog" class="dialog-card"><div class="dialog-header"><div><p class="eyebrow">Detalle operativo</p><h2 id="dialogTitle">Pedido</h2></div><button class="icon-button" value="close" aria-label="Cerrar">x</button></div><div class="detail-grid" id="detailGrid"></div><label>Actualizar estatus<select id="dialogStatus"><option>Cargando</option><option>Cargado en espera de documentos</option><option>En ruta a destino</option><option>Entregado</option></select></label><label>Nota interna<textarea id="dialogNote" rows="3"></textarea></label><label>Unidad<input id="dialogOwner" placeholder="Ej. Unidad 12 / Pipa 04"></label><label>Tanque 1<input id="dialogTank1" placeholder="Ej. 4,000 L"></label><div class="evidence-block"><strong>Evidencias y documentos</strong><div id="evidenceList" class="evidence-list"></div><label>Agregar evidencia<input id="dialogEvidence" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"></label></div><button class="ghost-button wide" id="uploadEvidenceButton" value="default">Subir evidencias</button><button class="primary-button wide" id="saveOrderButton" value="default">Guardar cambios</button></form></dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
