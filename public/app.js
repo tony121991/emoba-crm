@@ -81,7 +81,8 @@ function renderOrdersTable() {
   var status = q('#statusFilter').value;
   var filtered = state.orders.filter(function (order) { return status === 'all' || order.status === status; }).filter(function (order) { return matches(order, query); });
   q('#ordersTable').innerHTML = filtered.length ? filtered.map(function (order) {
-    var actions = has('manage_orders') ? '<button class="row-button" data-open="' + order.id + '">Editar</button> <button class="row-button danger" data-delete="' + order.id + '">Eliminar</button>' : '<button class="row-button" data-open="' + order.id + '">Ver</button>';
+    var encodedId = encodeURIComponent(order.id);
+    var actions = has('manage_orders') ? '<button class="row-button" data-open="' + encodedId + '">Editar</button> <button class="row-button danger" data-delete="' + encodedId + '">Eliminar</button>' : '<button class="row-button" data-open="' + encodedId + '">Ver</button>';
     return '<tr><td><strong>' + order.id + '</strong></td><td>' + order.customer + '</td><td>' + order.destination + '</td><td>' + formatDate(order.requestedDate) + '</td><td><span class="status ' + statusClass(order.status) + '">' + order.status + '</span></td><td>' + (order.owner || 'Sin unidad') + '</td><td>' + (order.tank1 || 'Por definir') + '</td><td>' + (order.product || 'Sin producto') + '</td><td class="row-actions">' + actions + '</td></tr>';
   }).join('') : '<tr><td colspan="9"><div class="empty-state">No hay pedidos con esos filtros.</div></td></tr>';
 }
@@ -241,13 +242,17 @@ q('#historySearch').addEventListener('input', renderHistory);
 q('#statusFilter').addEventListener('change', renderOrdersTable);
 q('#ordersTable').addEventListener('click', async function (event) {
   var openButton = event.target.closest('[data-open]');
-  if (openButton) { openOrder(openButton.dataset.open); return; }
+  if (openButton) { openOrder(decodeURIComponent(openButton.dataset.open)); return; }
   var deleteButton = event.target.closest('[data-delete]');
   if (deleteButton) {
-    var id = deleteButton.dataset.delete;
+    var id = decodeURIComponent(deleteButton.dataset.delete);
     if (!confirm('¿Eliminar el pedido ' + id + '? Esta acción no se puede deshacer.')) return;
-    await api('/api/orders/' + encodeURIComponent(id), { method: 'DELETE' });
-    await loadOrders();
+    try {
+      await api('/api/orders/' + encodeURIComponent(id), { method: 'DELETE' });
+      await loadOrders();
+    } catch (error) {
+      alert(error.message);
+    }
   }
 });
 
